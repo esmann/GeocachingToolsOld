@@ -1,6 +1,7 @@
 package dk.esmann.geocaching;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dk.esmann.geocaching.datastore.Cache;
 
 import javax.jdo.PersistenceManager;
@@ -27,8 +28,10 @@ public class LoadCachesServlet extends HttpServlet
         String query = "select from " + Cache.class.getName();
         @SuppressWarnings("unchecked")
         List<Cache> caches = (List<Cache>) pm.newQuery(query).execute();
-        Gson gson = new Gson();
+        //Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setExclusionStrategies(new markerInfoExclustionStrategy()).create();
         String jsonData = gson.toJson(caches); // TODO Do not fetch/convert ALL data for the caches
+        GsonBuilder gsonBuilder = new GsonBuilder();
         response.getWriter().write(jsonData);
     }
 
@@ -37,3 +40,7 @@ public class LoadCachesServlet extends HttpServlet
         doPost(request, response);
     }
 }
+
+
+
+
