@@ -56,9 +56,6 @@ public class UploadPocketQueryServlet extends HttpServlet
                 {
                     logger.warning("Got an uploaded file: " + item.getFieldName() + ", name = " + item.getName());
 
-                    int len;
-                    byte[] buffer = new byte[8192];
-
                     System.out.println("received: ");
                     ZipInputStream zipInputStream = new ZipInputStream(stream);
                     ZipEntry zipEntry;
@@ -100,7 +97,6 @@ public class UploadPocketQueryServlet extends HttpServlet
         //}
 
         Document doc = null;
-        String strError = null;
         ArrayList<Cache> caches = new ArrayList<Cache>();
 
         try
@@ -146,11 +142,9 @@ public class UploadPocketQueryServlet extends HttpServlet
             System.out.println("found " + waypointCounter + " waypoints");
             PersistenceManager pm = PMF.get().getPersistenceManager();
             pm.makePersistentAll(caches);
-            return;
         } catch (Exception e)
         {
             logger.log(Level.WARNING, "fail: ", e);
-            strError = e.toString();
         }
 
     }
