@@ -1,4 +1,4 @@
-package dk.esmann.geocaching.datastore.geocache;
+package dk.esmann.geocaching.datastore;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +23,9 @@ public class Cache
     private String code;
 
     @Persistent
+    private String name;
+
+    @Persistent
     private String placedBy;
 
     @Persistent
@@ -30,33 +33,6 @@ public class Cache
 
     @Persistent
     private Integer cacheId;
-
-    @Override
-    public String toString()
-    {
-        return "Cache{" +
-                "code='" + code + '\'' +
-                ", placedBy='" + placedBy + '\'' +
-                ", archived=" + archived +
-                ", cacheId=" + cacheId +
-                ", cacheType='" + cacheType + '\'' +
-                ", changed=" + changed +
-                ", container='" + container + '\'' +
-                ", country='" + country + '\'' +
-                ", difficulty=" + difficulty +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", longHTML='" + longHTML + '\'' +
-                ", ownerId=" + ownerId +
-                ", ownerName='" + ownerName + '\'' +
-                ", placedDate=" + placedDate +
-                ", shortHtml='" + shortHtml + '\'' +
-                ", Symbol='" + Symbol + '\'' +
-                ", temporaryDisabled=" + temporaryDisabled +
-                ", terrain=" + terrain +
-                ", created=" + created +
-                '}';
-    }
 
     @Persistent
     private String cacheType;
@@ -106,7 +82,15 @@ public class Cache
     @Persistent
     private Date created;
 
-    public Cache() {}
+    @Persistent
+    private Boolean hasTravelBug;
+
+    @Persistent
+    private Boolean found;
+
+    public Cache()
+    {
+    }
 
     public String getCode()
     {
@@ -306,5 +290,35 @@ public class Cache
     public void setCreated(Date created)
     {
         this.created = created;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public Boolean getHasTravelBug()
+    {
+        return hasTravelBug;
+    }
+
+    public void setHasTravelBug(Boolean hasTravelBug)
+    {
+        this.hasTravelBug = hasTravelBug;
+    }
+
+    public Boolean getFound()
+    {
+        return found;
+    }
+
+    public void setFound(Boolean found)
+    {
+        this.found = found;
     }
 }

@@ -11,6 +11,9 @@
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 
 <html>
+    <head>
+        <title>Simple jsp page</title>
+    </head>
     <body>
         <%
             UserService userService = UserServiceFactory.getUserService();
@@ -24,7 +27,6 @@
         %>
         <p>Hello!
         <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-        to include your name with greetings you post.</p>
         <%
             }
         %>

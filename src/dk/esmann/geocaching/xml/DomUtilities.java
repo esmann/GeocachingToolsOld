@@ -61,4 +61,17 @@ public class DomUtilities
         return Float.parseFloat(value);
     }
 
+    public static Boolean hasTravelBug(Element element)
+    {
+        NodeList elementList = element.getElementsByTagName("groundspeak:travelbugs");
+        Element subElement = (Element) elementList.item(0);
+        NodeList subElementList = subElement.getChildNodes();
+        return (subElementList.getLength() > 0);
+    }
+
+    public static Boolean isCacheFound(Element element)
+    {
+        String value = getValue(element, "sym");
+        return value.matches("Geocache Found");
+    }
 }
