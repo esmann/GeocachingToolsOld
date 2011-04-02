@@ -8,6 +8,8 @@ package dk.esmann.geocaching.datastore.geocache;
  * To change this template use File | Settings | File Templates.
  */
 
+import com.google.appengine.api.datastore.Text;
+
 import java.util.Date;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -29,6 +31,33 @@ public class Cache
     @Persistent
     private Integer cacheId;
 
+    @Override
+    public String toString()
+    {
+        return "Cache{" +
+                "code='" + code + '\'' +
+                ", placedBy='" + placedBy + '\'' +
+                ", archived=" + archived +
+                ", cacheId=" + cacheId +
+                ", cacheType='" + cacheType + '\'' +
+                ", changed=" + changed +
+                ", container='" + container + '\'' +
+                ", country='" + country + '\'' +
+                ", difficulty=" + difficulty +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", longHTML='" + longHTML + '\'' +
+                ", ownerId=" + ownerId +
+                ", ownerName='" + ownerName + '\'' +
+                ", placedDate=" + placedDate +
+                ", shortHtml='" + shortHtml + '\'' +
+                ", Symbol='" + Symbol + '\'' +
+                ", temporaryDisabled=" + temporaryDisabled +
+                ", terrain=" + terrain +
+                ", created=" + created +
+                '}';
+    }
+
     @Persistent
     private String cacheType;
 
@@ -42,7 +71,7 @@ public class Cache
     private String country;
 
     @Persistent
-    private Integer difficulty;
+    private Float difficulty;
 
     @Persistent
     private String latitude;
@@ -51,7 +80,7 @@ public class Cache
     private String longitude;
 
     @Persistent
-    private String longHTML;
+    private Text longHTML;
 
     @Persistent
     private Integer ownerId;
@@ -72,7 +101,7 @@ public class Cache
     private Boolean temporaryDisabled;
 
     @Persistent
-    private Integer terrain;
+    private Float terrain;
 
     @Persistent
     private Date created;
@@ -159,12 +188,12 @@ public class Cache
         this.country = country;
     }
 
-    public Integer getDifficulty()
+    public Float getDifficulty()
     {
         return difficulty;
     }
 
-    public void setDifficulty(Integer difficulty)
+    public void setDifficulty(Float difficulty)
     {
         this.difficulty = difficulty;
     }
@@ -189,12 +218,12 @@ public class Cache
         this.longitude = longitude;
     }
 
-    public String getLongHTML()
+    public Text getLongHTML()
     {
         return longHTML;
     }
 
-    public void setLongHTML(String longHTML)
+    public void setLongHTML(Text longHTML)
     {
         this.longHTML = longHTML;
     }
@@ -259,12 +288,12 @@ public class Cache
         this.temporaryDisabled = temporaryDisabled;
     }
 
-    public Integer getTerrain()
+    public Float getTerrain()
     {
         return terrain;
     }
 
-    public void setTerrain(Integer terrain)
+    public void setTerrain(Float terrain)
     {
         this.terrain = terrain;
     }

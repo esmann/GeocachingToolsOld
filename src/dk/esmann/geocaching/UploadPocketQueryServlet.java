@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -38,7 +39,7 @@ import org.w3c.dom.Document;
  */
 public class UploadPocketQueryServlet extends HttpServlet
 {
-    private Logger log = Logger.getLogger(UploadPocketQueryServlet.class.getName());
+    private Logger logger = Logger.getLogger(UploadPocketQueryServlet.class.getName());
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
@@ -56,7 +57,7 @@ public class UploadPocketQueryServlet extends HttpServlet
 
                 if (!item.isFormField())
                 {
-                    log.warning("Got an uploaded file: " + item.getFieldName() + ", name = " + item.getName());
+                    logger.warning("Got an uploaded file: " + item.getFieldName() + ", name = " + item.getName());
 
                     int len;
                     byte[] buffer = new byte[8192];
@@ -66,13 +67,13 @@ public class UploadPocketQueryServlet extends HttpServlet
                     ZipEntry zipEntry;
                     while ((zipEntry = zipInputStream.getNextEntry()) != null)
                     {
-                        log.info("unzipping: " + zipEntry.getName());
+                        logger.info("unzipping: " + zipEntry.getName());
                         if (zipEntry.getName().endsWith("wpts.gpx"))
                         {
-                            log.info("Handling wpts file");
+                            logger.info("Handling wpts file");
                         } else
                         {
-                            log.info("Handling cache file");
+                            logger.info("Handling cache file");
                             handleCacheFile(zipInputStream);
                         }
                     }
@@ -111,7 +112,6 @@ public class UploadPocketQueryServlet extends HttpServlet
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             doc = db.parse(zipInputStream);
-            System.out.println("Root element " + doc.getDocumentElement().getNodeName());
             NodeList waypoints = doc.getElementsByTagName("wpt");
 
             for (waypointCounter = 0; waypointCounter < waypoints.getLength(); waypointCounter++)
@@ -120,17 +120,24 @@ public class UploadPocketQueryServlet extends HttpServlet
                 if (waypoint.getNodeType() == Node.ELEMENT_NODE)
                 {
                     Element waypointElement = (Element) waypoint;
-                    String latitude = waypointElement.getAttribute("lat");
-                    String longitude = waypointElement.getAttribute("lon");
-                    String code = DomUtilities.getString(waypointElement, "name");
-                    Date placedDate = DomUtilities.getDate(waypointElement, "time");
-                    System.out.println("found cache " + code + " with coordinates " + latitude + ", " + longitude);
+                    Element groundSpeakElement = DomUtilities.getElement(waypointElement, "groundspeak:cache");
 
                     Cache cache = new Cache();
-                    cache.setLatitude(latitude);
-                    cache.setLongitude(longitude);
-                    cache.setCode(code);
-                    cache.setPlacedDate(placedDate);
+                    cache.setLatitude(waypointElement.getAttribute("lat"));
+                    cache.setLongitude(waypointElement.getAttribute("lon"));
+                    cache.setCode(DomUtilities.getString(waypointElement, "name"));
+                    cache.setPlacedDate(DomUtilities.getDate(waypointElement, "time"));
+                    cache.setArchived(Boolean.parseBoolean(groundSpeakElement.getAttribute("archived")));
+                    cache.setCacheId(Integer.parseInt(groundSpeakElement.getAttribute("id"), 10));
+                    cache.setCacheType(DomUtilities.getString(groundSpeakElement, "groundspeak:type"));
+                    cache.setContainer(DomUtilities.getString(groundSpeakElement, "groundspeak:container"));
+                    cache.setDifficulty(DomUtilities.getFloat(groundSpeakElement, "groundspeak:difficulty"));
+                    cache.setTerrain(DomUtilities.getFloat(groundSpeakElement, "groundspeak:terrain"));
+                    cache.setTemporaryDisabled(!Boolean.parseBoolean(groundSpeakElement.getAttribute("available")));
+                    cache.setCountry(DomUtilities.getString(groundSpeakElement, "groundspeak:country"));
+                    cache.setShortHtml(DomUtilities.getString(groundSpeakElement, "groundspeak:short_description"));
+                    cache.setLongHTML(DomUtilities.getText(groundSpeakElement, "groundspeak:long_description"));
+                    cache.setOwnerName(DomUtilities.getString(groundSpeakElement, "groundspeak:owner")); //TODO get id which is an attribute on the owner element
                     caches.add(cache);
                 }
             }
@@ -138,21 +145,12 @@ public class UploadPocketQueryServlet extends HttpServlet
             PersistenceManager pm = PMF.get().getPersistenceManager();
             pm.makePersistentAll(caches);
             return;
-        } catch (IOException ioe)
-        {
-            strError = ioe.toString();
-        } catch (ParserConfigurationException pce)
-        {
-            strError = pce.toString();
-        } catch (SAXException se)
-        {
-            strError = se.toString();
         } catch (Exception e)
         {
+            logger.log(Level.WARNING, "fail: ", e);
             strError = e.toString();
         }
 
-        log.severe("parseXml: " + strError);
     }
 
 }
