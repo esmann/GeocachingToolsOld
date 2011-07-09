@@ -11,7 +11,7 @@ function loadCaches()
 
     function showCaches(caches)
     {
-        console.log("showing caches");
+        console.log("showing %o caches", caches.length);
         $.each(caches, function (index, cache)
         {
             var myLatlng = new google.maps.LatLng(cache.latitude, cache.longitude);

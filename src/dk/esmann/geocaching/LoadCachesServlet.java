@@ -28,7 +28,7 @@ public class LoadCachesServlet extends HttpServlet
         String query = "select from " + Cache.class.getName();
         @SuppressWarnings("unchecked")
         List<Cache> caches = (List<Cache>) pm.newQuery(query).execute();
-        //Gson gson = new Gson();
+
         Gson gson = new GsonBuilder().setExclusionStrategies(new markerInfoExclustionStrategy()).create();
         String jsonData = gson.toJson(caches); // TODO Do not fetch/convert ALL data for the caches
         GsonBuilder gsonBuilder = new GsonBuilder();

@@ -75,26 +75,13 @@ public class UploadPocketQueryServlet extends HttpServlet
             }
         } catch (Exception ex)
         {
+            // TODO handle exception properly
             //throw new ServletException(ex);
         }
     }
 
     private void handleCacheFile(ZipInputStream zipInputStream)
     {
-        //int len;
-        //byte[] buffer = new byte[8192];
-        //
-        //try
-        //{
-        //    while ((len = zipInputStream.read(buffer, 0, buffer.length)) != -1)
-        //    {
-        //        System.out.write(buffer);
-        //        //response.getOutputStream().write(buffer, 0, len);
-        //    }
-        //} catch (IOException ioex)
-        //{
-        //    log.warning("unable to read zipfile");
-        //}
 
         Document doc = null;
         ArrayList<Cache> caches = new ArrayList<Cache>();
